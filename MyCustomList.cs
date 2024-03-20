@@ -134,10 +134,22 @@ namespace MyPersonArray
         #region Методы, которые нужно реализовать (Lvl-Noob)
         public void AddRange(IEnumerable<T> collection)
         {
-            throw new NotImplementedException();
+            using (IEnumerator<T> enumerator = collection!.GetEnumerator())
+            {
+                while(enumerator.MoveNext())
+                    Add(enumerator.Current);
+            }
         }
 
-        internal void AddWithResize(T item)
+        public void AddRange(params T[] collection)
+        {
+            for (int i = 0; i < collection.Length; i++)
+            {
+                Add(collection[i]);
+            }
+        }
+
+        private void AddWithResize(T item)
         {
             bool overflow = _size + 1 > Capacity ? true : false;
 
@@ -156,12 +168,12 @@ namespace MyPersonArray
             {
                 _innerArray[i] = default(T);
             }
-          
+            _size = 0;
         }
 
         public bool Contains(T item)
         {
-            throw new NotImplementedException();
+            return Array.IndexOf(_innerArray, item) >= 0;
         }
 
         public void CopyTo(T[] array, int arrayIndex)
@@ -171,7 +183,35 @@ namespace MyPersonArray
 
         public bool Remove(T item)
         {
-            throw new NotImplementedException();
+            int index = Array.IndexOf(_innerArray, item);
+            if (index != -1)
+            {
+                Span<T> span = new Span<T>(_innerArray);
+                var onepart = span[..index];
+                var twopart = span[(index+1)..];
+                T[] _temp = new T[(_innerArray.Length - 1)];
+                Array.ConstrainedCopy(onepart.ToArray(),0,_temp,0, onepart.Length);
+                Array.ConstrainedCopy(twopart.ToArray(), 0, _temp, onepart.Length, twopart.Length);
+                _innerArray = _temp;
+                _capacity = _innerArray.Length;
+                _size = _size - 1;
+                return true;
+            }
+            else
+            {
+                return false;
+            } 
+        }
+
+        public void RemoveAll(T item)
+        {
+
+            while (Contains(item))
+            {
+                Remove(item);
+                
+            }
+
         }
 
         public void CopyTo(Array array, int index)
