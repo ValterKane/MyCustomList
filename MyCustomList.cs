@@ -16,6 +16,7 @@ namespace MyPersonArray
         internal int _size;
         // Текущая версия объекта
         internal int _version;
+        internal int _capacity;
 
         // Пустая область памяти
         private static readonly T[] EmptyArray = new T[0];
@@ -26,7 +27,7 @@ namespace MyPersonArray
         // Свойство вместимости коллекци
         public int Capacity
         {
-            get => _innerArray.Length;
+            get => _capacity;
             set
             {
                 if (value < 0) throw new ArgumentOutOfRangeException("value");
@@ -42,10 +43,12 @@ namespace MyPersonArray
                                 Array.Copy(_innerArray, newItems, _size);
                             }
                             _innerArray = newItems;
+                            _capacity = _innerArray.Length;
                         }
                         else
                         {
                             _innerArray = EmptyArray;
+                            _capacity = 0;
                         }
                     }
                 }
@@ -75,6 +78,7 @@ namespace MyPersonArray
                     _innerArray = new T[capacity];
 
                _size = capacity;
+               Capacity = _size;
             }     
         }
         public MyCustomList(IEnumerable<T> collection)
@@ -95,6 +99,8 @@ namespace MyPersonArray
                         _innerArray = new T[count];
                         _collect.CopyTo(_innerArray, 0);
                         _size = count;
+                        Capacity = _size;
+                        
                     }
                 }
                 else
@@ -124,7 +130,7 @@ namespace MyPersonArray
             }
             else
             {
-                AddWithResize();
+                AddWithResize(item);
             }
         }
 
@@ -134,9 +140,15 @@ namespace MyPersonArray
             throw new NotImplementedException();
         }
 
-        internal void AddWithResize()
+        internal void AddWithResize(T item)
         {
-            throw new NotImplementedException();
+            bool overflow = Count + 1 > Capacity ? true : false;
+
+            if (overflow)
+            {
+                Capacity = Count + 1;
+                _innerArray[^1] = item;
+            }
         }
 
         public void Clear()
