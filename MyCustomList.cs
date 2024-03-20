@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyPersonArray
 {
@@ -65,6 +60,8 @@ namespace MyPersonArray
         {
             _innerArray = EmptyArray;
             _size = 0;
+            Capacity = 1;
+            _version = 0;
         }
         public MyCustomList(int capacity)
         {
@@ -72,14 +69,14 @@ namespace MyPersonArray
                 throw new ArgumentOutOfRangeException();
             else
             {
-               if(capacity == 0)
+                if (capacity == 0)
                     _innerArray = EmptyArray;
-               else
+                else
                     _innerArray = new T[capacity];
 
-               _size = capacity;
-               Capacity = _size;
-            }     
+                _size = capacity;
+                Capacity = _size;
+            }
         }
         public MyCustomList(IEnumerable<T> collection)
         {
@@ -100,14 +97,14 @@ namespace MyPersonArray
                         _collect.CopyTo(_innerArray, 0);
                         _size = count;
                         Capacity = _size;
-                        
+
                     }
                 }
                 else
                 {
                     using (IEnumerator<T> enumerator = collection!.GetEnumerator())
                     {
-                        while(enumerator.MoveNext())
+                        while (enumerator.MoveNext())
                         {
                             Add(enumerator.Current);
                         }
@@ -146,15 +143,20 @@ namespace MyPersonArray
 
             if (overflow)
             {
-                Capacity = _size + 1;
+                var temp = _size + 1;
+                Capacity = temp;
                 _size += 1;
-                _innerArray[_size] = item;
+                _innerArray[^1] = item;
             }
         }
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < _innerArray?.Length; i++)
+            {
+                _innerArray[i] = default(T);
+            }
+          
         }
 
         public bool Contains(T item)
@@ -211,15 +213,15 @@ namespace MyPersonArray
         {
             get
             {
-                if((uint) index > _size)
+                if ((uint)index > _size)
                     throw new ArgumentOutOfRangeException();
 
                 return _innerArray[index];
             }
 
-            set 
+            set
             {
-                if((uint)index > _size)
+                if ((uint)index > _size)
                     throw new ArgumentOutOfRangeException();
 
                 _innerArray[index] = value;
@@ -228,6 +230,6 @@ namespace MyPersonArray
             }
         }
 
-        
+
     }
 }
