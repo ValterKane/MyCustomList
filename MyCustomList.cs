@@ -142,12 +142,13 @@ namespace MyPersonArray
 
         internal void AddWithResize(T item)
         {
-            bool overflow = Count + 1 > Capacity ? true : false;
+            bool overflow = _size + 1 > Capacity ? true : false;
 
             if (overflow)
             {
-                Capacity = Count + 1;
-                _innerArray[^1] = item;
+                Capacity = _size + 1;
+                _size += 1;
+                _innerArray[_size] = item;
             }
         }
 
