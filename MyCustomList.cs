@@ -219,7 +219,10 @@ namespace MyPersonArray
             throw new NotImplementedException();
         }
 
-        public void Insert(int index, T item) => throw new NotImplementedException();
+        public void Insert(int index, T item)
+        {
+            
+        }
         #endregion
 
         #region Методы, которые нужно реализовать (Lvl-PRO)
