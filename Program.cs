@@ -1,4 +1,5 @@
 ﻿using MyPersonArray;
+using System.LINQ;
 
 MyCustomList<char> myList = new MyCustomList<char>();
 
@@ -25,7 +26,12 @@ Console.WriteLine($"Contains A is {myList.Contains('A')}");
 
 myList.RemoveAll('A');
 
-
-Console.WriteLine(string.Join(' ', myList));
+myList.ElementAt(); // <- пренадлежит LINQ
 
 Console.WriteLine($"Contains A is {myList.Contains('A')}");
+
+foreach(var item in myList)
+{
+
+    Console.WriteLine($"{item}")
+}

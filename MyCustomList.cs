@@ -240,9 +240,11 @@ namespace MyPersonArray
         {
             for (int i = 0; i < _size; i++)
             {
-                yield return _innerArray[i];
+                
+                yield return _innerArray[i]; 
             }
         }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _innerArray.GetEnumerator();
@@ -258,7 +260,7 @@ namespace MyPersonArray
 
                 return _innerArray[index];
             }
-
+ 
             set
             {
                 if ((uint)index > _size)
